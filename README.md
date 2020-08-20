@@ -23,7 +23,7 @@ ___
 ## Where are the cards saved?
 The script will make a folder named `Pokemon` in the directory the script is executed
 
-__
+___
 
 ## Error log
 This program has a log for every card that was not able to be downloaded because it was misiing in the website

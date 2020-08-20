@@ -1,4 +1,4 @@
 BeautifulSoup4
-platform
 requests
 wget
+html5lib

@@ -1,10 +1,10 @@
 #/usr/bin/python3
-from bs4 import BeautifulSoup as bsp
 from platform import system as OSdetect
-from os import system, getcwd, chdir, rename
+from os import getcwd, chdir, rename
 from os import makedirs as mkdir
 from requests import Session
 from wget import download
+from bs4 import BeautifulSoup as bsp
 
 # Prepares the HTML to be parsed
 def prepareToParse(link):
@@ -17,7 +17,7 @@ def prepareToParse(link):
 # This function removes it
 def removeAmpText(text):
     if "amp;" in text:
-        text = text.replace("amp;","")
+        text = text.replace("amp;", "")
         return text
     return text
 
@@ -40,7 +40,7 @@ def shellScriptDetect():
 # Fixes path routes if in Windows
 def fixPath(path):
     if shellScriptDetect() == "Batch":
-        path=path.replace("/", "\\")
+        path = path.replace("/", "\\")
     return path
 
 # Gets all card names from the current expansion
@@ -76,27 +76,28 @@ def changeDirectory(path):
     path = fixPath(f"{getcwd()}/{path}")
     chdir(path)
 
-# Downloads the cards from the current expansion 
-def downloadCards(card_URLs):
+# Downloads the cards from the current expansion
+def downloadCards(card_URLs, cards, expansion_set):
     for URL in card_URLs:
-        if "no-image" not in URL: 
+        if "no-image" not in URL:
             download(URL)
-        
-# Fixes names into Windows format 
+
+# Fixes names into Windows format
 def namesFix(names):
     for i in range(len(names)):
         if "?" in names[i]:
             names[i] = names[i].replace("?", "¿")
         if ":" in names[i]:
             names[i] = names[i].replace(":", ";")
-        
-# Renames the cards from the names in the website to their actual names (leaves a log if errors are presented)
+
+# Renames the cards from the names in the website to their actual names
+# (leaves a log if errors are presented)
 def renameCards(old_names, new_names, expansion):
     logname = fixPath("../../error.log")
     count = -1
     with open(logname, "a+") as error:
         for name in old_names:
-            count+=1
+            count += 1
             try:
                 if ".jpg" in name:
                     rename(name, f"{new_names[old_names.index(name)]}.jpg")
@@ -123,7 +124,7 @@ if __name__ == "__main__":
             if line[0] != "#":
                 expansion_ID = int(line.split("-")[0])
                 expansions.append(expansion_ID)
-    # Cards parsing and downloading 
+    # Cards parsing and downloading
     for expansion in expansions:
         url = f"https://www.tcgcollector.com/cards?expansion-{expansion}=on"
         website = prepareToParse(url)
@@ -135,12 +136,12 @@ if __name__ == "__main__":
         mkdir(folder_path, exist_ok=True)
         changeDirectory(folder_path)
         card_urls = getCardURLs(website)
-        downloadCards(card_urls)
         old_card_names = getOldNames(card_urls)
         new_card_names = getCardNames(website)
         if shellScriptDetect() == "Batch":
             namesFix(new_card_names)
         additionalNameFixes(new_card_names)
+        downloadCards(card_urls, new_card_names, expansion_title)
         renameCards(old_card_names, new_card_names, website)
         changeDirectory(fixPath("../.."))
     # Sets up the end of the execution in the log

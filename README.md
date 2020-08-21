@@ -26,4 +26,4 @@ The script will make a folder named `Pokemon` in the directory the script is exe
 ___
 
 ## Error log
-This program has a log for every card that was not able to be downloaded because it was misiing in the website
+This program has a log for every card that was not able to be downloaded because it was missing in the website

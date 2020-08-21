@@ -15,7 +15,7 @@ ___
 
 ___
 
-## Usage
+## Usage:
 Read the instructions inside the `expansions` file and then edit it to your needs.
 
 ___
